@@ -2,7 +2,9 @@
 
 {% block content %}
     <h2>Book
-        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#bookkModal">Add Book</button>
+        {% if user.is_authenticated and user.is_superuser %}
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#bookkModal">Add Book</button>
+        {% endif %}
     </h2>
 
     <div class="input-group mb-3">

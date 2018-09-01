@@ -18,6 +18,12 @@ class RackView(TemplateView):
         return render(request, self.template_name, {'page': 'rack', 'racks': racks})
 
     def post(self, request):
+        # Super User Check
+        superuser = request.user.is_superuser
+        if not superuser:
+            messages.success(request, 'Error - Only super user can perform this action.')
+            return render(request, self.template_name, {'alert': 'alert-danger'})
+
         form = RackForm(request.POST or None, request.FILES or None)
         if form.is_valid():
             form.save()
@@ -49,6 +55,12 @@ class BookView(TemplateView):
             return JsonResponse(books_list, safe=False)
 
     def post(self, request):
+        # Super User Check
+        superuser = request.user.is_superuser
+        if not superuser:
+            messages.success(request, 'Error - Only super user can perform this action.')
+            return render(request, self.template_name, {'alert': 'alert-danger'})
+
         form = BookForm(request.POST or None, request.FILES or None)
         rack_id = request.POST['rack_id']
         rack = get_object_or_404(Rack, pk=rack_id)

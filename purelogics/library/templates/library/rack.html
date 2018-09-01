@@ -2,7 +2,9 @@
 
 {% block content %}
     <h2>Racks
-    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#rackModal">Add Rack</button>
+        {% if user.is_authenticated and user.is_superuser %}
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#rackModal">Add Rack</button>
+        {% endif %}
     </h2>
 
     {% if form.errors %}
