@@ -1,11 +1,12 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView
 from .models import Rack, Book
-from django.db.models import Count
+from django.db.models import Count, Q
 from django.contrib import messages
 from .forms import RackForm, BookForm
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.http import JsonResponse
 
 
 @method_decorator(login_required, name='dispatch')
@@ -34,9 +35,18 @@ class BookView(TemplateView):
     template_name = 'library/book.html'
 
     def get(self, request):
-        books = Book.objects.all()
-        racks = Rack.objects.all()
-        return render(request, self.template_name, {'page': 'book', 'racks': racks, 'books': books})
+
+        search = request.GET.get('search')
+        if search is None:
+            books = Book.objects.all()
+            racks = Rack.objects.all()
+            return render(request, self.template_name, {'page': 'book', 'racks': racks, 'books': books})
+        else:
+            books = Book.objects.filter(Q(title__contains=search) | Q(author__contains=search) |
+                                        Q(published_year__contains=search)).values('title', 'author',
+                                                                                   'published_year', 'rack__name')
+            books_list = list(books)
+            return JsonResponse(books_list, safe=False)
 
     def post(self, request):
         form = BookForm(request.POST or None, request.FILES or None)

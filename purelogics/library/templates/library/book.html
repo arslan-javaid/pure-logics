@@ -9,7 +9,7 @@
   <div class="input-group-prepend">
     <span class="input-group-text" id="basic-addon1">Search</span>
   </div>
-  <input type="text" class="form-control" placeholder="i.e title, author name or published year">
+  <input id="search" type="text" class="form-control" placeholder="i.e title, author name or published year">
 </div>
 
     <table class="table table-striped">
@@ -21,7 +21,7 @@
           <th scope="col">Rack Name</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="tbody-books">
         {% for book in books %}
             <tr>
               <th scope="row">{{ book.title }}</th>
@@ -86,4 +86,46 @@
       </div>
     </div>
     <!-- End Modal -->
+
+<script type="application/javascript">
+    window.onload = function(e){
+        let conf = {
+            url : {% url 'book' %}
+        };
+        oBook = new Library(conf);
+    };
+
+    function Library(conf){
+        this.url = conf.url;
+
+        // Events
+        let self = this;
+        $('#search').on('keyup', function (e) {
+            self.search();
+        });
+    }
+
+    Library.prototype.search = function () {
+        let $tbody = $('#tbody-books'), html = '';
+            fields = {'search': $('#search').val() };
+        $.get(this.url, fields, function(response){
+            if(response.length > 0) {
+                $tbody.html('');
+                html = '';
+                for (let i = 0; i < response.length; i++) {
+                    let book = response[i];
+                    html += '<tr>';
+                    html += '<th scope="row">'+ book.title +'</th>';
+                    html += '<td>'+ book.author +'</td>';
+                    html += '<td>'+ book.published_year +'</td>';
+                    html += '<td>'+ book.rack__name +'</td>';
+                    html += '</tr>';
+                }
+
+                $tbody.html(html);
+
+            }
+        },'json');
+    };
+</script>
 {% endblock %}
