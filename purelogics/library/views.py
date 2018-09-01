@@ -43,11 +43,22 @@ class BookView(TemplateView):
         rack_id = request.POST['rack_id']
         rack = get_object_or_404(Rack, pk=rack_id)
         if form.is_valid():
+            # Current Racks & books
+            current_books = Book.objects.all()
+            current_racks = Rack.objects.all()
+            context = {'alert': 'alert-danger', 'page': 'book', 'racks': current_books, 'books': current_racks,
+                       'form': form}
+
             books = rack.book_set.all()
+            # Only 10 books can be added in a rack.
+            if books.count() >= 10:
+                messages.success(request, 'Only 10 books can be added in a rack.')
+                return render(request, self.template_name, context)
+
             for book in books:
                 if book.title == form.cleaned_data.get("title"):
                     messages.success(request, 'You already added that book.')
-                    return render(request, self.template_name, {'alert': 'alert-danger', 'form': form})
+                    return render(request, self.template_name, context)
 
             book = form.save(commit=False)
             book.rack = rack
