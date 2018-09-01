@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
 from .models import Rack, Book
 from django.db.models import Count, Q
 from django.contrib import messages
@@ -34,6 +34,11 @@ class RackView(TemplateView):
         else:
             messages.success(request, 'Error - Please try again...')
             return render(request, self.template_name, {'alert': 'alert-danger', 'form': form})
+
+
+class RackDetailView(DetailView):
+    model = Rack
+
 
 
 @method_decorator(login_required, name='dispatch')

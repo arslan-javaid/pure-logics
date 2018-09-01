@@ -24,10 +24,12 @@
 
     <ul class="list-group">
         {% for rack in racks %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            {{ rack.name }}
-            <span class="badge badge-primary badge-pill">{{ rack.total_books }}</span>
-        </li>
+            <a href="{% url 'rack-detail' rack.pk %}">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ rack.name }}
+                    <span class="badge badge-primary badge-pill">{{ rack.total_books }}</span>
+                </li>
+            </a>
         {% endfor %}
     </ul>
 
