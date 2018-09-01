@@ -1,0 +1,89 @@
+{% extends 'authenticate/base.html' %}
+
+{% block content %}
+    <h2>Book
+        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#bookkModal">Add Book</button>
+    </h2>
+
+    <div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <span class="input-group-text" id="basic-addon1">Search</span>
+  </div>
+  <input type="text" class="form-control" placeholder="i.e title, author name or published year">
+</div>
+
+    <table class="table table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Title</th>
+          <th scope="col">Author Name</th>
+          <th scope="col">Published Year</th>
+          <th scope="col">Rack Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for book in books %}
+            <tr>
+              <th scope="row">{{ book.title }}</th>
+              <td>{{ book.author }}</td>
+              <td>{{ book.published_year }}</td>
+              <td>{{ book.rack.name }}</td>
+            </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <nav aria-label="Page navigation example">
+      <ul class="pagination justify-content-end">
+        <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1">Previous</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+          <a class="page-link" href="#">Next</a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Modal -->
+    <div class="modal fade" id="bookkModal" tabindex="-1" role="dialog" aria-labelledby="bookkModalTitle" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="bookkModalTitle">Add Rack</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+            <form method="POST" action="{% url 'book' %}">
+            {% csrf_token %}
+              <div class="modal-body">
+                  <div class="form-group">
+                    <label for="sel1">Select Rack:</label>
+                    <select class="form-control" name="rack_id" id="rack_id">
+                        {% for rack in racks %}
+                            <option value="{{ rack.pk }}">{{ rack.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="title" placeholder="Enter Title">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="author" placeholder="Enter Author name">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" name="published_year" placeholder="Published Year">
+                </div>
+
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-secondary">Save</button>
+              </div>
+            </form>
+        </div>
+      </div>
+    </div>
+    <!-- End Modal -->
+{% endblock %}
