@@ -1,7 +1,9 @@
 from django.views.generic import TemplateView, View
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
+from .forms import SignUpForm
 
 
 class Home(TemplateView):
@@ -43,3 +45,28 @@ class LogoutView(View):
         logout(request)
         messages.success(request, 'You have been logged out!!!')
         return render(request, self.template_name, {'alert': 'alert-success'})
+
+
+class RegisterView(TemplateView):
+    template_register = 'authenticate/register.html'
+    template_home = 'authenticate/home.html'
+
+    def get(self, request):
+        if request.user.is_authenticated:
+            return render(request, self.template_home, {})
+        else:
+            form = SignUpForm()
+            return render(request, self.template_register, {'form': form})
+
+    def post(self, request):
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password1']
+            user = authenticate(request, username=username, password=password)
+            login(request, user)
+            messages.success(request, 'You have registered successfully!!!')
+            return render(request, self.template_home, {'alert': 'alert-success'})
+
+        return render(request, self.template_register, {'form': form})
