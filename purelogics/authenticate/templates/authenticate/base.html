@@ -55,12 +55,12 @@
         <div class="container">
             {% if messages %}
                 {% for message in messages %}
-                    <div class="alert {{ alert }} alter-dismissable" role="alert">
-                        <button class="close" data-dismiss="alert">
-                            <small><sup>x</sup></small>
-                        </button>
-                        {{ message }}
-                    </div>
+                <div class="alert {% if alert %} {{ alert }} {% else %} alert-success {% endif %} alter-dismissable" role="alert">
+                    <button class="close" data-dismiss="alert">
+                        <small><sup>x</sup></small>
+                    </button>
+                    {{ message }}
+                </div>
                 {% endfor %}
 
             {% endif %}

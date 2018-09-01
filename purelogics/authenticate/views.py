@@ -1,5 +1,5 @@
 from django.views.generic import TemplateView, View
-from django.shortcuts import render
+from django.shortcuts import render, redirect, reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import SignUpForm
@@ -9,7 +9,7 @@ class Home(TemplateView):
     template_name = 'authenticate/home.html'
 
     def get(self, request):
-        return render(request, self.template_name, {})
+        return redirect(reverse('rack', kwargs={}))
 
 
 class Authentication(TemplateView):
@@ -18,7 +18,7 @@ class Authentication(TemplateView):
 
     def get(self, request):
         if request.user.is_authenticated:
-            return render(request, self.template_home, {})
+            return redirect(reverse('rack', kwargs={}))
         else:
             return render(request, self.template_login, {})
 
@@ -30,7 +30,7 @@ class Authentication(TemplateView):
             login(request, user)
             messages.success(request, 'You have been logged in!!!')
             # Redirect to a success page.
-            return render(request, self.template_home, {'alert': 'alert-success'})
+            return redirect(reverse('rack', kwargs={}))
         else:
             messages.success(request, 'Error Logged in - Please try again...')
             # Return an 'invalid login' error message.
