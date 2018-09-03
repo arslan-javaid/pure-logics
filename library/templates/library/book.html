@@ -76,7 +76,7 @@
                     <input type="text" class="form-control" name="author" placeholder="Enter Author name">
                 </div>
                 <div class="form-group">
-                    <input type="text" class="form-control" name="published_year" placeholder="Published Year">
+                    <input type="text" class="form-control datepicker" name="published_year" placeholder="Published Year">
                 </div>
 
               </div>
@@ -91,6 +91,12 @@
 
 <script type="application/javascript">
     window.onload = function(e){
+        // DATE PICKER
+        $('.datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true
+        });
+
         let conf = {
             url : {% url 'book' %}
         };
