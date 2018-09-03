@@ -25,7 +25,7 @@ SECRET_KEY = 'gy!os67ssddt*703+r%l%t!es(%7zmf#&ko0(p%(a#p0-#3e47'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['library.arslanjavaid.com', 'pure-logics.herokuapp.com']
+ALLOWED_HOSTS = ['library.arslanjavaid.com', 'pure-logics.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
